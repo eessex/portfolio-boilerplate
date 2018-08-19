@@ -1,11 +1,16 @@
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { ItemTeaser } from 'client/Components/Item/ItemTeaser'
 import { ErrorBoundary } from 'client/Components/ErrorBoundary'
+import * as itemsActions from 'client/actions/items'
 
 export class Items extends Component {
   static propTypes = {
-    data: PropTypes.object
+    error: PropTypes.func,
+    fetchItemsAction: PropTypes.func,
+    items: PropTypes.array,
+    loading: PropTypes.bool
   }
 
   constructor(props) {
@@ -38,10 +43,10 @@ export class Items extends Component {
     }
   }
 
-  fetchItems = (query) => {
+  fetchItems = query => {
     this.setState(() => ({ data: {} }))
 
-    this.props.fetchInitialData(query)
+    this.props.fetchItemsAction(query)
       .then(data => {
         this.setState(() => ({ data }))
     })
@@ -56,16 +61,33 @@ export class Items extends Component {
     } else {
       return (
         <ErrorBoundary>
-          <ul>
-            {items.map(item => (
-              <li key={item.id}>
-                <ItemTeaser item={item} />
-              </li>
-            ))
-            }
-          </ul>
+          <div>
+            <ul>
+              {items.map(item => (
+                <li key={item.id}>
+                  <ItemTeaser item={item} />
+                </li>
+              ))
+              }
+            </ul>
+          </div>
         </ErrorBoundary>
       )
     }
   }
 }
+
+const mapStateToProps = ({ itemsReducer }) => ({
+  error: itemsReducer.error,
+  items: itemsReducer.items,
+  loading: itemsReducer.loading,
+})
+
+const mapDispatchToProps = ({
+  fetchItemsAction: itemsActions.fetchItems
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Items)
