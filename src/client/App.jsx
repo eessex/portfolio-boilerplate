@@ -18,7 +18,6 @@ export class App extends Component {
               <Route key={path} path={path} exact={exact} render={
                 props => {
                   const pageTitle = `${appTitle}${title ? ` | ${title}` : ''}`
-
                   return (
                     <div>
                       <Helmet>

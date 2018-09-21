@@ -26,7 +26,7 @@ events.route('/')
     if (event) {
       res.json(event)
     } else {
-      res.send({error: "not found"})
+      res.send({ error: 'not found' })
     }
   })
 

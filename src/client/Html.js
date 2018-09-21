@@ -1,4 +1,4 @@
-import serialize from "serialize-javascript"
+import serialize from 'serialize-javascript'
 
 export const Html = ({ data, markup }) => {
   return `
