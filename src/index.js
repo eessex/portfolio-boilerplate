@@ -12,6 +12,9 @@ import routes from 'client/routes'
 import { App } from 'client/App'
 import { Html } from 'client/Html'
 
+require("babel-core/register")
+require("babel-polyfill")
+
 const app = express()
 
 app.use(bodyParser.json())

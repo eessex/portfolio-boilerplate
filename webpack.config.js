@@ -4,7 +4,7 @@ var nodeExternals = require('webpack-node-externals')
 var Dotenv = require('dotenv-webpack')
 
 var browserConfig = {
-  entry: './src/client/index.js',
+  entry: ['babel-polyfill', './src/client/index.js'],
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
@@ -37,7 +37,7 @@ var browserConfig = {
 }
 
 var serverConfig = {
-  entry: './src/index.js',
+  entry: ['babel-polyfill', './src/index.js'],
   target: 'node',
   externals: [nodeExternals()],
   output: {
