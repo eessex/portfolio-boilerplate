@@ -1,14 +1,22 @@
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
+import mongoose from 'mongoose'
 import morgan from 'morgan'
 import { matchPath } from 'react-router-dom'
 import createStore from 'client/store'
 import routes from 'client/routes'
 import { ServerRender } from 'server/render.js'
+const { MONGODB_URI } = process.env
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log('Mongodb connected')
+  }).catch((err) => {
+    console.log('Mongodb error', err)
+  })
 
 const app = express()
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(morgan('dev'))
