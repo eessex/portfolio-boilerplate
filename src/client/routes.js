@@ -25,7 +25,7 @@ const routes =  [
     model: 'events',
     title: 'Events',
     fetchInitialData: (path = '', store) => {
-      return store.dispatch(fetchItems('events'))
+      return store.dispatch(fetchItems(path))
     }
   }
 ]

@@ -6,7 +6,7 @@ export const FETCH_ITEMS_ERROR = 'FETCH_ITEMS_ERROR'
 export const FETCH_ITEMS_REQUESTED = 'FETCH_ITEMS_REQUESTED'
 
 export const fetchItems = (model = '', query = {}) => dispatch => {
-  const encodedURI = encodeURI(`${API_URL}/${model}`)
+  const encodedURI = encodeURI(`${API_URL}${model}`)
 
   dispatch({
     type: FETCH_ITEMS_REQUESTED

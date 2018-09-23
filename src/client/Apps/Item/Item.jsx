@@ -10,20 +10,22 @@ export class Item extends Component {
   constructor(props) {
     super(props)
 
-    let item
+    let data
     if (__isBrowser__) {
-      item = window.__INITIAL_DATA__
+      data = window.__INITIAL_DATA__
       delete window.__INITIAL_DATA__
     } else {
-      item = props.staticContext.data
+      data = props.staticContext.data
     }
-    this.state = { item }
+    this.state = { data }
   }
 
   componentWillMount () {
-    const { item } = this.state
+    if (!__isBrowser__) return
+    const { item, loading, match: { params } } = this.props
+    const isNewId = item && (params.id !== item.id.toString())
 
-    if (!item && !this.props.loading) {
+    if ((!item && !loading) || isNewId) {
       this.fetchItem()
     }
   }
@@ -39,26 +41,31 @@ export class Item extends Component {
   }
 
   render() {
+    const { data } = this.state
     const { error, loading } = this.props
-    const item = this.state.item || this.props.item
-    const pageTitle = `${appTitle}${item && item.title ? ` | ${item.title}` : ''}`
+    const item = data && data || this.props.item
+    
+    if (!item || loading) {
+      return <p>LOADING</p>
+    } else {
+      const pageTitle = `${appTitle}${item.title ? ` | ${item.title}` : ''}`
 
-    return (
-      <div>
-        <ErrorBoundary>
-          {loading && <p>LOADING</p>}
-          {error && <p>{error.message}</p>}
-          {item &&
-            <div>
-              <Helmet>
-                <title>{pageTitle}</title>
-              </Helmet>
-              <ItemPage item={item} />
-            </div>
-          }
-        </ErrorBoundary>
-      </div>
-    )
+      return (
+        <div>
+          <ErrorBoundary>
+            {error && <p>{error.message}</p>}
+            {item &&
+              <div>
+                <Helmet>
+                  <title>{pageTitle}</title>
+                </Helmet>
+                <ItemPage item={item} />
+              </div>
+            }
+          </ErrorBoundary>
+        </div>
+      )
+    }
   }
 }
 

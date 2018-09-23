@@ -9,7 +9,7 @@ export const isServer = !(
   typeof window !== 'undefined' &&
   window.document &&
   window.document.createElement
-);
+)
 
 export default (url = '/') => {
   const history = isServer
@@ -34,10 +34,10 @@ export default (url = '/') => {
     ...enhancers
   )
 
-  const initialState = !isServer ? window.__PRELOADED_STATE__ : {}
+  const initialState = !isServer ? window.__INITIAL_DATA__ : {}
 
   if (!isServer) {
-    delete window.__PRELOADED_STATE__
+    delete window.__INITIAL_DATA__
   }
 
   const store = createStore(

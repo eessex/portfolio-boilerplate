@@ -2,18 +2,10 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
-import React from 'react'
-import { renderToString } from 'react-dom/server'
-import { Provider } from 'react-redux'
-import { StaticRouter, matchPath } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { matchPath } from 'react-router-dom'
 import createStore from 'client/store'
 import routes from 'client/routes'
-import { App } from 'client/App'
-import { Html } from 'client/Html'
-
-require("babel-core/register")
-require("babel-polyfill")
+import { ServerRender } from 'server/render.js'
 
 const app = express()
 
@@ -31,33 +23,17 @@ app.use('/api', require('./api'))
 
 app.get('*', (req, res, next) => {
   const { store } = createStore(req.url)
-  const activeRoute = routes.find(route => matchPath(req.url, route)) || {}
+  const activeRoute = routes.find(route => matchPath(req.url, route))
 
-  const promise = activeRoute.fetchInitialData
+  const promise = activeRoute && activeRoute.fetchInitialData
     ? activeRoute.fetchInitialData(req.path, store)
-    : Promise.resolve({})
+    : Promise.resolve()
 
   promise.then(data => {
-    const context = { data } 
+    const context = { data }
+    const content = ServerRender(req.url, store, context)
 
-    const title = activeRoute ? activeRoute.title : (data && data.title)
-
-    const markup = renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={context}>
-          <App />
-        </StaticRouter>
-      </Provider>
-    )
-    const helmet = Helmet.renderStatic()
-
-    res.send(
-      Html({
-        title,
-        data,
-        markup
-      })
-    )
+    res.send(content)
   }).catch(next)
 })
 

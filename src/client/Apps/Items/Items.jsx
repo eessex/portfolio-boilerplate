@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { ItemTeaser } from 'client/Components/Item/ItemTeaser'
+import { ItemsList } from 'client/Components/Items/ItemsList'
 import { ErrorBoundary } from 'client/Components/ErrorBoundary'
 import * as itemsActions from 'client/actions/items'
 
@@ -26,12 +26,11 @@ export class Items extends Component {
     this.state = { data }
   }
 
-  componentDidMount () {
-    const { data } = this.state
-    const { path } = this.props.match
+  componentWillMount() {
+    const { items, loading } = this.props
 
-    if (!data || data && !data.items) {
-      this.fetchItems(path)
+    if (!items && !loading) {
+      this.fetchItems()
     }
   }
 
@@ -39,38 +38,26 @@ export class Items extends Component {
     const { path } = this.props.match
 
     if (prevProps.match.path !== path) {
-      this.fetchItems(path)
+      this.fetchItems()
     }
   }
 
-  fetchItems = query => {
-    this.setState(() => ({ data: {} }))
+  fetchItems = () => {
+    const { fetchItemsAction, match: { path } } = this.props
 
-    this.props.fetchItemsAction(query)
-      .then(data => {
-        this.setState(() => ({ data }))
-    })
+    fetchItemsAction(path)
   }
 
   render() {
     const { data } = this.state
-    const items = data && data.items || []
+    const items = data && data || this.props.items
 
-    if (!data) {
+    if (!items || this.props.loading) {
       return <p>LOADING</p>
     } else {
       return (
         <ErrorBoundary>
-          <div>
-            <ul>
-              {items.map(item => (
-                <li key={item.id}>
-                  <ItemTeaser item={item} />
-                </li>
-              ))
-              }
-            </ul>
-          </div>
+          <ItemsList items={items} />
         </ErrorBoundary>
       )
     }
