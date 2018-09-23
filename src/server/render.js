@@ -7,27 +7,26 @@ import { App } from 'client/App'
 import serialize from 'serialize-javascript'
 
 export const ServerRender = (path, store, context) => {
-    const markup = renderToString(
-      <Provider store={store}>
-        <StaticRouter location={path} context={context}>
-          <App />
-        </StaticRouter>
-      </Provider>
-    )
-    const helmet = Helmet.renderStatic()
+  const markup = renderToString(
+    <Provider store={store}>
+      <StaticRouter location={path} context={context}>
+        <App />
+      </StaticRouter>
+    </Provider>
+  )
+  const helmet = Helmet.renderStatic()
 
-    return `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          ${helmet.title}
-          <script src="/bundle.js" defer></script>
-          <script>window.__INITIAL_DATA__ = ${serialize(store.getState())}</script>
-        </head>
-        <body style="margin:0">
-          <div id="app">${markup}</div>
-        </body>
-      </html>
-    `
-
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        ${helmet.title}
+        <script src="/bundle.js" defer></script>
+        <script>window.__INITIAL_DATA__ = ${serialize(store.getState())}</script>
+      </head>
+      <body style="margin:0">
+        <div id="app">${markup}</div>
+      </body>
+    </html>
+  `
 }

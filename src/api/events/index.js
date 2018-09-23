@@ -1,31 +1,27 @@
+import Event from './schema'
 var express = require('express')
 var events = express.Router()
 
-const eventData = [
-  {
-    id: 1,
-    slug: 'first-event',
-    title: 'First Event'
-  }, {
-    id: 2,
-    slug: 'second-event',
-    title: 'Second Event'
-  }
-]
-
 events.route('/')
   .get((req, res) => {
-    res.json(eventData)
+    Event.find(req.query).sort({ title: 'desc' }).exec(
+      function (err, data) {
+        if (err) {
+          res.send(err)
+        }
+        res.json(data)
+      }
+    )
   })
 
-  events.route('/:id')
+events.route('/:slug')
   .get((req, res) => {
-    const event = eventData[req.params.id - 1]
-    if (event) {
-      res.json(event)
-    } else {
-      res.send({ error: 'not found' })
-    }
+    Event.findOne({ slug: req.params.slug }, (err, data) => {
+      if (err) {
+        return res.status(400).send(err)
+      }
+      res.json(data)
+    })
   })
 
 module.exports = events

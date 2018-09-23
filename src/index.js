@@ -9,12 +9,14 @@ import routes from 'client/routes'
 import { ServerRender } from 'server/render.js'
 const { MONGODB_URI } = process.env
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
-  .then(() => {
-    console.log('Mongodb connected')
-  }).catch((err) => {
-    console.log('Mongodb error', err)
-  })
+mongoose.connect(
+  MONGODB_URI,
+  { useNewUrlParser: true, useCreateIndex: true }
+).then(() => {
+  console.log('Mongodb connected')
+}).catch((err) => {
+  console.log('Mongodb error', err)
+})
 
 const app = express()
 app.use(bodyParser.json())

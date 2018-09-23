@@ -21,7 +21,7 @@ var browserConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __isBrowser__: "true"
+      __isBrowser__: 'true'
     }),
     new Dotenv({
       path: './.env'

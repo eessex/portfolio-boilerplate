@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { ItemTeaser } from 'client/components/Item/ItemTeaser'
+import { ItemTeaser } from 'client/Components/Item/ItemTeaser'
 
 export const ItemsList = props => {
   const { items } = props
@@ -8,7 +8,7 @@ export const ItemsList = props => {
   return (
     <ul>
       {items.map(item => (
-        <li key={item.id}>
+        <li key={item.slug}>
           <ItemTeaser item={item} />
         </li>
       ))

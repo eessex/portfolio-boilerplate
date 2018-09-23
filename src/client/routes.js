@@ -4,7 +4,7 @@ import { fetchItems } from 'client/actions/items'
 import Item from 'client/Apps/Item/Item'
 import Items from 'client/Apps/Items/Items'
 
-const routes =  [
+const routes = [
   {
     path: '/',
     exact: true,
@@ -12,7 +12,7 @@ const routes =  [
     title: 'Home'
   },
   {
-    path: '/events/:id',
+    path: '/events/:slug',
     model: 'events',
     component: Item,
     fetchInitialData: (path = '', store) => {
